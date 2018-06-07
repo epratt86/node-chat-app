@@ -10,10 +10,15 @@ const server = http.createServer(app);
 const io = socketIO(server);
 
 io.on('connection', (socket) => {
-  console.log('New user connected.');
 
-  socket.on('disconnect', () => {
-    console.log('disconnected from server');
+  socket.emit('newMessage', {
+    from: 'server@example.com',
+    text: 'wuzz up?',
+    createdAt: Date.now()
+  });
+
+  socket.on('createMessage', (message) => {
+    console.log('createMessage', message);
   });
 });
 
