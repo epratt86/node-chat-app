@@ -4,16 +4,17 @@ const messageForm = document.getElementById('message-form');
 const locationButton = document.getElementById('send-location');
 
 socket.on('newMessage', function (message) {
-  console.log('newMessage', message);
+  let formattedTime = moment(message.createdAt).format('h:mm a');
 
   const li = document.createElement('li');
-  li.innerHTML = `${message.from}: ${message.text}`;
+  li.innerHTML = `${message.from} ${formattedTime}: ${message.text}`;
 
   document.getElementById('messages').appendChild(li);
 
 });
 
 socket.on('newLocationMessage', function (message) {
+  let formattedTime = moment(message.createdAt).format('h:mm a');
   const li = document.createElement('li');
   const a = document.createElement('a');
 
@@ -21,7 +22,7 @@ socket.on('newLocationMessage', function (message) {
   a.setAttribute('target', '_blank');
   a.textContent = 'My Current Location';
 
-  li.innerHTML = `${message.from}: `;
+  li.innerHTML = `${message.from}: ${formattedTime}`;
 
 
   document.getElementById('messages').appendChild(li);
