@@ -23,7 +23,20 @@ function scrollToBottom() {
   if ((clientHeight + scrollTop + newMessageHeight + prevMessageHeight) >= scrollHeight) {
     messages.scrollTop = scrollHeight;
   }
-}
+};
+
+socket.on('connect', function () {
+  let params = jQuery.deparam(window.location.search);
+
+  socket.emit('join', params, function (err) {
+    if (err) {
+      alert(err);
+      window.location.href = '/';
+    } else {
+      console.log('no error');
+    }
+  });
+});
 
 socket.on('newMessage', function (message) {
   let formattedTime = moment(message.createdAt).format('h:mm a');
