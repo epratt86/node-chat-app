@@ -3,6 +3,28 @@ const socket = io();
 const messageForm = document.getElementById('message-form');
 const locationButton = document.getElementById('send-location');
 
+function scrollToBottom() {
+  const messages = document.getElementById('messages');
+  const newMessage = messages.lastElementChild;
+  const prevMessage = newMessage.previousElementSibling;
+
+  const clientHeight = messages.clientHeight;
+  const scrollTop = messages.scrollTop;
+  const scrollHeight = messages.scrollHeight;
+
+  const newMessageStyle = window.getComputedStyle(newMessage, null);
+  const newMessageHeight = parseInt(newMessageStyle.getPropertyValue("height"));
+  let prevMessageHeight = 0;
+  if (prevMessage) {
+    const prevMessageStyle = window.getComputedStyle(prevMessage, null);
+    prevMessageHeight = parseInt(prevMessageStyle.getPropertyValue("height"));
+  }
+
+  if ((clientHeight + scrollTop + newMessageHeight + prevMessageHeight) >= scrollHeight) {
+    messages.scrollTop = scrollHeight;
+  }
+}
+
 socket.on('newMessage', function (message) {
   let formattedTime = moment(message.createdAt).format('h:mm a');
   let template = document.getElementById('message-template').innerHTML;
@@ -12,6 +34,7 @@ socket.on('newMessage', function (message) {
     createdAt: formattedTime
   });
   document.getElementById('messages').innerHTML += html;
+  scrollToBottom();
 });
 
 socket.on('newLocationMessage', function (message) {
@@ -23,6 +46,7 @@ socket.on('newLocationMessage', function (message) {
     createdAt: formattedTime
   });
   document.getElementById('messages').innerHTML += html;
+  scrollToBottom();
 });
 
 messageForm.addEventListener('submit', (e) => {
