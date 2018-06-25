@@ -81,7 +81,6 @@ messageForm.addEventListener('submit', (e) => {
   const messageTextBox = document.getElementsByName('message')[0];
 
   socket.emit('createMessage', {
-    from: 'user',
     text: messageTextBox.value
   }, function () {
     messageTextBox.value = ""
